@@ -1,19 +1,23 @@
 import { readFile } from 'node:fs/promises';
 
-const permutationsOf = (array) => {
+const permutationsOf = (array, callback) => {
   const swap = (array, pos1, pos2) => {
     var temp = array[pos1];
     array[pos1] = array[pos2];
     array[pos2] = temp;
   };
 
-  const heaps = (n, heapArr, results = []) => {
+  const heaps = (n, heapArr, results = [], cb = null) => {
     if (n < 1) {
-      results.push(heapArr.slice());
+      if (cb) {
+        cb(heapArr)
+      } else {
+        results.push(heapArr.slice());
+      }
       return;
     }
 
-    heaps(n-1, heapArr, results);
+    heaps(n-1, heapArr, results, cb);
     for (let i = 0; i < n-1; i++) {
       if (n % 2 === 0) {
         swap(heapArr, i, n-1);
@@ -21,15 +25,15 @@ const permutationsOf = (array) => {
         swap(heapArr, 0, n-1);
       }
 
-      heaps(n-1, heapArr, results);
+      heaps(n-1, heapArr, results, cb);
     }
     return results;
   }
 
   if (typeof(array) === 'string') {
-    return heaps(array.length, array.split(''), []);
+    return heaps(array.length, array.split(''), [], callback);
   } else if (Array.isArray(array)) {
-    return heaps(array.length, array.slice(), []);
+    return heaps(array.length, array.slice(), [], callback);
   } else {
     console.error(`called permutations with a non array arg: ${array}`);
     return [];
@@ -87,22 +91,18 @@ for (const word of wordsList) {
   wordsTrie.insert(word);
 }
 
-const letterPermutations = permutationsOf(letters).map(w => w.join(''));
-
-
-
 const answers = new Set();
 
-for (const perm of letterPermutations) {
-  let word = perm;
+permutationsOf(letters, (perm) => {
+  let word = perm.join('');
   while (word.length >= MIN_WORD_LENGTH) {
     if (wordsTrie.contains(word)) {
       answers.add(word);
       break;
     }
     word = word.slice(0, -1);
-  }
-}
+  } 
+});
 
 const sorted = Array.from(answers).sort((a,b) => b.length - a.length);
 
