@@ -79,6 +79,7 @@ const args = process.argv.slice(2);
 
 const letters = args[0];
 console.log(letters);
+console.log(`n = ${letters.length}`);
 
 const t1 = performance.now();
 
