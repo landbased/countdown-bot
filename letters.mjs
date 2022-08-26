@@ -87,6 +87,8 @@ const rawWords = await readFile('./words.txt');
 
 const wordsList = String(rawWords).split(/\r?\n/);
 
+console.log(`searching ${wordsList.length} words...`);
+
 const wordsTrie = new Trie();
 for (const word of wordsList) {
   wordsTrie.insert(word);
