@@ -77,7 +77,7 @@ const MIN_WORD_LENGTH = 4;
 
 const args = process.argv.slice(2);
 
-const letters = args[0];
+const letters = args[0].toUpperCase();
 console.log(letters);
 console.log(`n = ${letters.length}`);
 
@@ -85,7 +85,7 @@ const t1 = performance.now();
 
 const rawWords = await readFile('./words.txt');
 
-const wordsList = String(rawWords).split(/\r?\n/);
+const wordsList = String(rawWords).toUpperCase().split(/\r?\n/);
 
 console.log(`searching ${wordsList.length} words...`);
 
